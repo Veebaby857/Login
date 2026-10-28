@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+html { background:#04060b; color-scheme: dark; }
+:root {
+  --bg: #04060b;
+  --panel: #080c16;
+  --card: #0c1120;
+  --field: #070a13;
+  --blue: #1f6bff;
+  --blue-hover: #4285ff;
+  --text: #f2f5fb;
+  --muted: #8d97ad;
+  --border: #1b2438;
+  --green: #22c55e;
+  --red: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-width: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+/* ---------- Brand side ---------- */
+.brand-side {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  padding: 48px 56px;
+  background:
+    radial-gradient(900px 500px at 20% 0%, rgba(31,107,255,0.22), transparent 60%),
+    var(--panel);
+  border-right: 1px solid var(--border);
+  flex-direction: column;
+  justify-content: space-between;
+}
+.brand-side .chart {
+  position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 46%;
+  opacity: 0.9; pointer-events: none;
+}
+.brand-copy { position: relative; z-index: 1; max-width: 440px; }
+.brand-copy h2 { font-size: 34px; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 14px; }
+.brand-copy p { color: var(--muted); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+.trust { list-style: none; display: grid; gap: 12px; }
+.trust li { display: flex; gap: 10px; align-items: center; font-size: 14px; color: #c9d1e3; }
+.trust svg { flex-shrink: 0; color: var(--blue); }
+
+/* ---------- Logo ---------- */
+.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); position: relative; z-index: 1; }
+.logo img { height: 40px; width: auto; display: block; }
+.logo-fallback { display: none; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
+.logo-mark { width: 38px; height: 38px; border-radius: 10px; background: var(--blue); display: grid; place-items: center; }
+
+/* ---------- Form side ---------- */
+.form-side { display: flex; align-items: center; justify-content: center; padding: 24px 20px 90px; }
+.form-wrap { width: 100%; max-width: 440px; }
+.mobile-logo { text-align: center; margin-bottom: 24px; }
+.mobile-logo .logo { justify-content: center; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 30px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 6px; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 26px; line-height: 1.5; }
+
+.form-group { margin-bottom: 16px; }
+.row { display: grid; grid-template-columns: 1fr; gap: 0; }
+label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #b4bdd0; }
+
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--field);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%238d97ad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; }
+select option { background: #0c1120; color: #f2f5fb; }
+input::placeholder { color: #566078; }
+input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(31,107,255,0.2); }
+input.invalid, select.invalid { border-color: var(--red); }
+
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 64px; }
+.pw-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); font: 500 12px 'Inter', sans-serif; cursor: pointer; padding: 6px 8px; }
+.pw-toggle:hover { color: var(--text); }
+
+.hint { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+.err { font-size: 12px; color: var(--red); margin-top: 6px; display: none; }
+.err.show { display: block; }
+
+.forgot { text-align: right; margin: -4px 0 20px; }
+.forgot a { color: var(--blue-hover); font-size: 13px; text-decoration: none; }
+
+.section-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text); margin: 24px 0 12px; padding-top: 20px; border-top: 1px solid var(--border); }
+.section-title svg { color: var(--blue); }
+.sec-box { background: rgba(31,107,255,0.07); border: 1px solid rgba(31,107,255,0.25); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+.sec-box .form-group:last-child { margin-bottom: 0; }
+
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--muted); line-height: 1.5; margin: 6px 0 18px; }
+.check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--blue); flex-shrink: 0; }
+.check a { color: var(--blue-hover); text-decoration: none; }
+
+.btn {
+  width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; border-radius: 10px;
+  font: 600 16px 'Inter', sans-serif; cursor: pointer; transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.btn:hover { background: var(--blue-hover); box-shadow: 0 8px 24px rgba(31,107,255,0.35); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible, .social-btn:focus-visible { outline: 2px solid #9db8ff; outline-offset: 2px; }
+
+.divider { display: flex; align-items: center; margin: 22px 0; color: var(--muted); font-size: 13px; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.divider span { padding: 0 12px; }
+
+.social-buttons { display: flex; gap: 12px; }
+.social-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px;
+  background: var(--field); border: 1px solid var(--border); border-radius: 10px; color: var(--text);
+  font: 500 14px 'Inter', sans-serif; cursor: pointer; transition: border-color 0.2s;
+}
+.social-btn:hover { border-color: #33415f; }
+
+.footer-link { text-align: center; margin-top: 22px; font-size: 14px; color: var(--muted); }
+.footer-link a { color: var(--blue-hover); font-weight: 500; text-decoration: none; }
+
+.risk { text-align: center; font-size: 11px; color: #5d687f; margin-top: 18px; line-height: 1.6; }
+.note { display: none; margin-top: 14px; font-size: 13px; text-align: center; color: var(--green); }
+.note.show { display: block; }
+
+@media (min-width: 960px) {
+  body { grid-template-columns: 1.05fr 1fr; }
+  .brand-side { display: flex; }
+  .mobile-logo { display: none; }
+  .form-side { padding: 40px; }
+  .row { grid-template-columns: 1fr 1fr; gap: 14px; }
+}
+@media (max-width: 420px) { .card { padding: 28px 20px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+
+/* Support chat bubble */
+#support-bubble {
+  position: fixed; right: 20px; bottom: 20px; z-index: 2147483000;
+  display: flex; align-items: center; gap: 10px;
+  background: #1f6bff; color: #fff; border: none; cursor: pointer;
+  font: 600 14px 'Inter', sans-serif;
+  padding: 14px 18px; border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(31,107,255,0.5);
+  transition: background .2s, transform .15s;
+}
+#support-bubble:hover { background: #4285ff; transform: translateY(-2px); }
+#support-bubble:focus-visible { outline: 2px solid #9db8ff; outline-offset: 3px; }
+#support-bubble .dot { width: 9px; height: 9px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.6); animation: bubblePulse 2s infinite; }
+@keyframes bubblePulse { 0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,.55);} 50% { box-shadow: 0 0 0 6px rgba(34,197,94,0);} }
+@media (max-width: 480px) { #support-bubble span.lbl { display: none; } #support-bubble { padding: 16px; } }
+</style>
+</head>
+<body>
+
+  <aside class="brand-side">
+    <a class="logo" href="index.html">
+      <img src="logo.png" alt="Company logo" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">
+      <span class="logo-fallback"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg></span>YOUR BRAND</span>
+    </a>
+
+    <div class="brand-copy">
+      <h2>Open your trading account in minutes.</h2>
+      <p>Set up your profile and add a security question so you can always prove the account is yours.</p>
+      <ul class="trust">
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Security question for account recovery</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Live customer support by chat</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>Real-time charts and market data</li>
+      </ul>
+    </div>
+
+    <svg class="chart" viewBox="0 0 600 260" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f6bff" stop-opacity="0.35"/><stop offset="1" stop-color="#1f6bff" stop-opacity="0"/></linearGradient></defs>
+      <path d="M0 210 L40 190 L80 200 L120 160 L160 170 L200 130 L240 145 L280 100 L320 115 L360 80 L400 95 L440 55 L480 70 L520 35 L560 45 L600 20 L600 260 L0 260Z" fill="url(#g)"/>
+      <path d="M0 210 L40 190 L80 200 L120 160 L160 170 L200 130 L240 145 L280 100 L320 115 L360 80 L400 95 L440 55 L480 70 L520 35 L560 45 L600 20" fill="none" stroke="#1f6bff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+  </aside>
+
+  <main class="form-side">
+    <div class="form-wrap">
+
+      <div class="mobile-logo">
+        <a class="logo" href="index.html">
+          <img src="logo.png" alt="Company logo" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">
+          <span class="logo-fallback"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg></span>YOUR BRAND</span>
+        </a>
+      </div>
+
+      <div class="card">
+        <h1>Create Account</h1>
+        <p class="subtitle">Fill in your details to start trading.</p>
+
+        <form id="regForm" novalidate>
+          <div class="row">
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" placeholder="Jane" autocomplete="given-name" required>
+              <div class="err" id="err-fname">Enter your first name.</div>
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" placeholder="Smith" autocomplete="family-name" required>
+              <div class="err" id="err-lname">Enter your last name.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
+            <div class="err" id="err-email">Enter a valid email address.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="pw-wrap">
+              <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password" required>
+              <button type="button" class="pw-toggle" onclick="togglePw('password', this)">Show</button>
+            </div>
+            <div class="hint">Use 8+ characters with a number and a letter.</div>
+            <div class="err" id="err-password">Password needs 8+ characters, with at least one letter and one number.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm">Confirm Password</label>
+            <div class="pw-wrap">
+              <input type="password" id="confirm" placeholder="Repeat your password" autocomplete="new-password" required>
+              <button type="button" class="pw-toggle" onclick="togglePw('confirm', this)">Show</button>
+            </div>
+            <div class="err" id="err-confirm">Passwords do not match.</div>
+          </div>
+
+          <div class="section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Account Security
+          </div>
+
+          <div class="sec-box">
+            <div class="form-group">
+              <label for="question">Security Question</label>
+              <select id="question" required>
+                <option value="">Choose a question</option>
+                <option>What was the name of your first pet?</option>
+                <option>What is your mother's maiden name?</option>
+                <option>What was the name of your primary school?</option>
+                <option>In what town were you born?</option>
+                <option>What was your childhood nickname?</option>
+                <option>What was the model of your first phone?</option>
+                <option>What is the name of your favourite teacher?</option>
+              </select>
+              <div class="err" id="err-question">Choose a security question.</div>
+            </div>
+            <div class="form-group">
+              <label for="answer">Your Answer</label>
+              <input type="text" id="answer" placeholder="Your answer" autocomplete="off" required>
+              <div class="hint">If your account is ever stolen or you lose access, support will ask this to confirm it is really you. Pick something only you know.</div>
+              <div class="err" id="err-answer">Enter an answer of at least 3 characters.</div>
+            </div>
+          </div>
+
+          <label class="check" for="terms">
+            <input type="checkbox" id="terms">
+            <span>I agree to the <a href="terms.html">Terms &amp; Conditions</a> and <a href="privacy.html">Privacy Policy</a>, and I understand that trading carries risk.</span>
+          </label>
+          <div class="err" id="err-terms" style="margin:-10px 0 14px">You must accept the terms to continue.</div>
+
+          <button type="submit" class="btn">Create Account</button>
+          <div class="note" id="note">Details look good. Connect this form to your sign-up backend.</div>
+        </form>
+
+        <p class="footer-link">
+          Already have an account? <a href="login.html">Log In</a>
+        </p>
+      </div>
+
+      <p class="risk">Trading leveraged products carries a high level of risk and may not be suitable for everyone.</p>
+    </div>
+  </main>
+
+  <script>
+    function togglePw(id, btn) {
+      var el = document.getElementById(id);
+      var show = el.type === 'password';
+      el.type = show ? 'text' : 'password';
+      btn.textContent = show ? 'Hide' : 'Show';
+    }
+    function v(id) { return document.getElementById(id).value; }
+
+    document.getElementById('regForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var checks = [
+        ['fname', v('fname').trim().length > 0],
+        ['lname', v('lname').trim().length > 0],
+        ['email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email').trim())],
+        ['password', v('password').length >= 8 && /[A-Za-z]/.test(v('password')) && /\d/.test(v('password'))],
+        ['confirm', v('confirm') === v('password') && v('confirm').length > 0],
+        ['question', v('question') !== ''],
+        ['answer', v('answer').trim().length >= 3],
+        ['terms', document.getElementById('terms').checked]
+      ];
+      var ok = true;
+      checks.forEach(function (c) {
+        var input = document.getElementById(c[0]);
+        if (c[0] !== 'terms') input.classList.toggle('invalid', !c[1]);
+        document.getElementById('err-' + c[0]).classList.toggle('show', !c[1]);
+        if (!c[1]) ok = false;
+      });
+      if (!ok) return;
+      // TODO: send the details to your backend. On the server, store the security
+      // answer HASHED (like a password, lowercased and trimmed first), never as plain text.
+      document.getElementById('note').classList.add('show');
+    });
+  </script>
+  <!-- Customer support chat bubble (opens your Tawk.to chat) -->
+  <button id="support-bubble" type="button" aria-label="Chat with Customer Support" onclick="openSupportChat()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span class="lbl">Chat with Support</span><span class="dot"></span>
+  </button>
+
+  <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    var tawkReady = false;
+    Tawk_API.onLoad = function () {
+      tawkReady = true;
+      Tawk_API.hideWidget();                       // we use our own bubble above
+    };
+    Tawk_API.onChatMinimized = function () { Tawk_API.hideWidget(); };
+    (function () {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/69e88d9b9745901c38bf7678/1jmq6iakj';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+
+    function openSupportChat() {
+      if (tawkReady) {
+        Tawk_API.showWidget();
+        Tawk_API.maximize();
+      } else {
+        // If the widget is blocked or still loading, open the direct Tawk chat page
+        window.open('https://tawk.to/chat/69e88d9b9745901c38bf7678/1jmq6iakj', '_blank');
+      }
+    }
+  </script>
+  <!--End of Tawk.to Script-->
+</body>
+</html>
